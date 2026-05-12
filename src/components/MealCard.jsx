@@ -22,14 +22,20 @@ function getBadgeStyle(badge) {
   return accentBadges.includes(badge) ? badgeStyle.accent : badgeStyle.primary
 }
 
-function PlaceholderImage({ meal }) {
+const FALLBACK = (category) => `data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='150'><rect fill='%23F5EDE2' width='200' height='150'/><text x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-size='32'>${categoryEmoji[category] || '🍽️'}</text></svg>`
+
+function FoodImage({ meal, className, style }) {
+  const [failed, setFailed] = useState(false)
+  const src = failed || !meal.image ? FALLBACK(meal.category) : meal.image
   return (
-    <div className="w-full h-full flex flex-col items-center justify-center gap-1.5" style={{ background: 'var(--color-beige)', borderRadius: 'inherit' }}>
-      <span className="text-3xl">{categoryEmoji[meal.category] || '🍽️'}</span>
-      <span className="text-[10px] text-[#9E8E84] text-center px-2 leading-tight line-clamp-2">
-        {meal.name}
-      </span>
-    </div>
+    <img
+      src={src}
+      alt={meal.imageAlt || meal.name}
+      className={className}
+      style={style}
+      loading="lazy"
+      onError={() => setFailed(true)}
+    />
   )
 }
 
@@ -60,12 +66,14 @@ export default function MealCard({
 
   if (mode === 'compact') {
     return (
-      <div className="bg-white rounded-2xl p-3 shadow-sm border border-[#EDE5DC]" style={{ borderRadius: 'var(--radius-card)' }}>
-        <div className="aspect-square rounded-xl overflow-hidden mb-2">
-          <PlaceholderImage meal={meal} />
+      <div className="bg-white overflow-hidden" style={{ borderRadius: 'var(--radius-card)', border: '1px solid var(--color-border)', boxShadow: 'var(--shadow-card)' }}>
+        <div className="aspect-[4/3] overflow-hidden">
+          <FoodImage meal={meal} className="w-full h-full object-cover" />
         </div>
-        <p className="text-xs font-semibold text-[#1C1C1C] line-clamp-2 leading-tight">{meal.name}</p>
-        <p className="text-xs font-bold mt-0.5" style={{ color: 'var(--color-primary)' }}>{meal.price} RSD</p>
+        <div className="p-3">
+          <p className="text-xs font-semibold text-[#1C1C1C] line-clamp-1 leading-tight">{meal.name}</p>
+          <p className="text-xs font-bold mt-0.5" style={{ color: 'var(--color-primary)' }}>{meal.price} RSD</p>
+        </div>
       </div>
     )
   }
@@ -79,7 +87,7 @@ export default function MealCard({
       <div className="bg-white rounded-xl border border-[#EDE5DC]">
         <div className="flex items-center gap-3 p-3">
           <div className="w-14 h-14 shrink-0 rounded-xl overflow-hidden">
-            <PlaceholderImage meal={meal} />
+            <FoodImage meal={meal} className="w-full h-full object-cover" style={{ borderRadius: '12px' }} />
           </div>
 
           <div className="flex-1 min-w-0">
@@ -134,12 +142,15 @@ export default function MealCard({
                   <button
                     key={alt.id}
                     onClick={() => handleSelectAlt(alt)}
-                    className="flex items-center justify-between gap-2 p-2 rounded-lg transition-colors text-left"
-                    style={{ borderRadius: 'var(--radius-badge)' }}
-                    onMouseEnter={e => { e.currentTarget.style.background = 'var(--color-primary-light)'; e.currentTarget.style.border = '1px solid var(--color-primary)'; }}
-                    onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.border = '1px solid transparent'; }}
+                    className="flex items-center gap-3 p-2 rounded-lg transition-colors text-left"
+                    style={{ border: '1px solid transparent', borderRadius: 'var(--radius-badge)' }}
+                    onMouseEnter={e => { e.currentTarget.style.background = 'var(--color-primary-light)'; e.currentTarget.style.borderColor = 'var(--color-primary)'; }}
+                    onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.borderColor = 'transparent'; }}
                   >
-                    <span className="text-sm text-[#1C1C1C] line-clamp-1">{alt.name}</span>
+                    <div className="w-10 h-10 rounded-lg overflow-hidden flex-none">
+                      <FoodImage meal={alt} className="w-full h-full object-cover" />
+                    </div>
+                    <span className="text-sm text-[#1C1C1C] line-clamp-1 flex-1">{alt.name}</span>
                     <span className="text-sm font-semibold shrink-0" style={{ color: 'var(--color-primary)' }}>
                       {alt.price} RSD
                     </span>
@@ -159,7 +170,7 @@ export default function MealCard({
   // mode="full"
   return (
     <div
-      className="bg-white flex flex-col overflow-hidden transition-all duration-200 cursor-default"
+      className="bg-white flex flex-col overflow-hidden transition-all duration-200 cursor-default group"
       style={{
         borderRadius: 'var(--radius-card)',
         boxShadow: 'var(--shadow-card)',
@@ -170,7 +181,10 @@ export default function MealCard({
     >
       {/* Image */}
       <div className="relative aspect-[4/3] overflow-hidden" style={{ borderRadius: 'var(--radius-card) var(--radius-card) 0 0' }}>
-        <PlaceholderImage meal={meal} />
+        <FoodImage
+          meal={meal}
+          className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-[1.04]"
+        />
         {meal.badges.length > 0 && (
           <div className="absolute top-2 left-2 flex flex-wrap gap-1">
             {meal.badges.slice(0, 2).map((badge) => (
@@ -215,7 +229,7 @@ export default function MealCard({
             onMouseLeave={e => e.currentTarget.style.background = 'var(--color-primary)'}
           >
             <ShoppingCart size={13} />
-            В корзину
+            В набор
           </button>
         </div>
       </div>

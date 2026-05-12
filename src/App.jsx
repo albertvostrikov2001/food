@@ -3,12 +3,15 @@ import { ShoppingCart, FileText } from 'lucide-react'
 import { CartProvider, useCart } from './context/CartContext'
 import Header from './components/Header'
 import Hero from './components/Hero'
+import FeaturedMeals from './components/FeaturedMeals'
+import MenuBuilder from './components/MenuBuilder'
+import Pricing from './components/Pricing'
 import Benefits from './components/Benefits'
 import Audience from './components/Audience'
-import MenuBuilder from './components/MenuBuilder'
 import HowItWorks from './components/HowItWorks'
 import B2BSection from './components/B2BSection'
-import Pricing from './components/Pricing'
+import FridgeBlock from './components/FridgeBlock'
+import Gallery from './components/Gallery'
 import Production from './components/Production'
 import FAQ from './components/FAQ'
 import FinalCTA from './components/FinalCTA'
@@ -30,22 +33,50 @@ function AppContent() {
   const cartCount = state.items.reduce((s, i) => s + i.quantity, 0)
 
   return (
-    <div className="min-h-screen bg-[#FAFAF8] font-sans">
+    <div className="min-h-screen font-sans" style={{ background: 'var(--color-bg)' }}>
       <Header
         onCartOpen={() => setCartOpen(true)}
         onOrderOpen={() => openOrder(false)}
       />
 
       <main>
+        {/* 1. Hero */}
         <Hero onOrderOpen={() => openOrder(false)} />
+
+        {/* 2. Самые аппетитные блюда недели */}
+        <FeaturedMeals />
+
+        {/* 3. Пробный набор + меню */}
+        <div id="menu">
+          <MenuBuilder onCartOpen={() => setCartOpen(true)} />
+        </div>
+
+        {/* 4. Все наборы */}
+        <Pricing onCartOpen={() => setCartOpen(true)} />
+
+        {/* 5. Почему удобнее / преимущества */}
         <Benefits />
         <Audience />
-        <MenuBuilder onCartOpen={() => setCartOpen(true)} />
+
+        {/* 6. Как работает */}
         <HowItWorks />
-        <Pricing onCartOpen={() => setCartOpen(true)} />
+
+        {/* 7. B2B */}
         <B2BSection onOrderOpen={openOrder} />
+
+        {/* 8. Еда в холодильнике */}
+        <FridgeBlock onOrder={() => openOrder(false)} />
+
+        {/* 9. Галерея */}
+        <Gallery />
+
+        {/* 10. Производство */}
         <Production />
+
+        {/* 11. FAQ */}
         <FAQ />
+
+        {/* 12. Финальная форма */}
         <FinalCTA onOrderOpen={() => openOrder(false)} />
       </main>
 
@@ -80,7 +111,7 @@ function AppContent() {
             style={{ background: 'var(--color-primary)' }}
           >
             <FileText size={16} />
-            Оставить заявку
+            Хочу попробовать
           </button>
         </div>
       )}

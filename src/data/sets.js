@@ -1,6 +1,9 @@
+const IMG = '/food/images/'
+
 export const sets = [
   {
     id: "set_trial",
+    coverImage: IMG + 'set-trial.jpg',
     name: "Пробный на 3 дня",
     tagline: "Начните без риска",
     description: "Попробуйте сервис без обязательств. 9 блюд на 3 дня: завтрак, обед и ужин каждый день. Замените всё, что не нравится.",
@@ -31,6 +34,7 @@ export const sets = [
   },
   {
     id: "set_workweek",
+    coverImage: IMG + 'set-workweek.jpg',
     name: "Будни (5 дней)",
     tagline: "Еда на всю рабочую неделю",
     description: "15 блюд на 5 рабочих дней: завтрак, обед, ужин. Один раз заказали — весь холодильник на неделю.",
@@ -69,6 +73,7 @@ export const sets = [
   },
   {
     id: "set_week",
+    coverImage: IMG + 'set-week.jpg',
     name: "Неделя (7 дней)",
     tagline: "Полная неделя без готовки",
     description: "21 блюдо на 7 дней — максимальное удобство. Вы экономите ~15% по сравнению с отдельными блюдами.",
@@ -108,6 +113,7 @@ export const sets = [
   },
   {
     id: "set_couple",
+    coverImage: IMG + 'set-couple.jpg',
     name: "Для пары (7 дней)",
     tagline: "Вместе и без готовки",
     description: "42 блюда для двоих на 7 дней. Удобно, когда оба заняты — в холодильнике всегда еда для двоих.",
@@ -169,6 +175,7 @@ export const sets = [
   },
   {
     id: "set_office",
+    coverImage: IMG + 'set-office.jpg',
     name: "Офисный (5 дней)",
     tagline: "Питание для команды",
     description: "25 блюд для офиса на 5 дней: обеды и офисные боулы для 2–3 человек. Регулярные поставки 1–2 раза в неделю.",

@@ -1,9 +1,11 @@
+import { useState } from 'react'
 import { Users, Calendar, Package, Star } from 'lucide-react'
 import { getMealById } from '../data/meals'
 import { useCart } from '../context/CartContext'
 
 export default function SetCard({ set, onOrder }) {
   const { dispatch } = useCart()
+  const [imgFailed, setImgFailed] = useState(false)
   const previewMeals = set.meals.slice(0, 3)
 
   function handleAdd() {
@@ -13,26 +15,54 @@ export default function SetCard({ set, onOrder }) {
 
   return (
     <div
-      className="relative bg-white flex flex-col h-full transition-shadow hover:shadow-lg"
+      className="relative bg-white flex flex-col h-full transition-all duration-200 overflow-hidden group"
       style={{
         borderRadius: 'var(--radius-card)',
-        boxShadow: 'var(--shadow-card)',
+        boxShadow: set.highlight ? '0 4px 24px rgba(208,57,94,0.18)' : 'var(--shadow-card)',
         border: set.highlight ? '2px solid var(--color-primary)' : '1px solid var(--color-border)',
       }}
+      onMouseEnter={e => { e.currentTarget.style.boxShadow = 'var(--shadow-card-hover)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
+      onMouseLeave={e => { e.currentTarget.style.boxShadow = set.highlight ? '0 4px 24px rgba(208,57,94,0.18)' : 'var(--shadow-card)'; e.currentTarget.style.transform = 'none'; }}
     >
-      {/* Badge */}
-      {set.badge && (
-        <div
-          className="absolute -top-3 right-4 px-3 py-1 text-xs font-bold rounded-full shadow"
-          style={
-            set.highlight
-              ? { background: 'var(--color-primary)', color: 'white' }
-              : { background: 'var(--color-primary-light)', color: 'var(--color-primary)' }
-          }
-        >
-          {set.highlight && <Star size={10} className="inline mr-1" />}
-          {set.badge}
+      {/* Cover image */}
+      {set.coverImage && !imgFailed ? (
+        <div className="relative aspect-[16/9] overflow-hidden">
+          <img
+            src={set.coverImage}
+            alt={`${set.name} — пример набора`}
+            loading="lazy"
+            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+            onError={() => setImgFailed(true)}
+          />
+          <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(28,10,5,0.45) 0%, transparent 50%)' }} />
+          {/* Badge on image */}
+          {set.badge && set.highlight && (
+            <div className="absolute top-3 left-3 flex items-center gap-1 px-3 py-1 text-xs font-bold rounded-full" style={{ background: 'var(--color-primary)', color: 'white' }}>
+              <Star size={10} />
+              {set.badge}
+            </div>
+          )}
+          {set.badge && !set.highlight && (
+            <div className="absolute top-3 left-3 px-3 py-1 text-xs font-semibold rounded-full" style={{ background: 'var(--color-accent)', color: 'white' }}>
+              {set.badge}
+            </div>
+          )}
         </div>
+      ) : (
+        /* Badge fallback (no image) */
+        set.badge && (
+          <div
+            className="absolute -top-3 right-4 px-3 py-1 text-xs font-bold rounded-full shadow"
+            style={
+              set.highlight
+                ? { background: 'var(--color-primary)', color: 'white' }
+                : { background: 'var(--color-primary-light)', color: 'var(--color-primary)' }
+            }
+          >
+            {set.highlight && <Star size={10} className="inline mr-1" />}
+            {set.badge}
+          </div>
+        )
       )}
 
       <div className="p-5 flex flex-col flex-1">
@@ -82,7 +112,7 @@ export default function SetCard({ set, onOrder }) {
             {set.saving > 0 && (
               <>
                 <span className="text-sm text-[#9E8E84] line-through">{set.basePrice.toLocaleString()} RSD</span>
-                <span className="text-xs font-semibold px-2 py-0.5 rounded-lg" style={{ background: 'var(--color-accent-light)', color: 'var(--color-accent)', borderRadius: 'var(--radius-badge)' }}>
+                <span className="text-xs font-semibold px-2 py-0.5 rounded-lg" style={{ background: 'var(--color-accent-light)', color: '#c96b00', borderRadius: 'var(--radius-badge)' }}>
                   −{set.saving.toLocaleString()} RSD
                 </span>
               </>
@@ -95,7 +125,7 @@ export default function SetCard({ set, onOrder }) {
           onClick={handleAdd}
           className="w-full py-3 font-semibold transition-colors text-sm text-white"
           style={{
-            background: 'var(--color-primary)',
+            background: set.highlight ? 'var(--color-primary)' : 'var(--color-primary)',
             borderRadius: 'var(--radius-btn)',
           }}
           onMouseEnter={e => e.currentTarget.style.background = 'var(--color-primary-hover)'}
