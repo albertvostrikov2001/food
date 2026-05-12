@@ -3,7 +3,7 @@ import { getMealById } from '../data/meals'
 
 const CartContext = createContext(null)
 
-const STORAGE_KEY = 'porta_cart'
+const STORAGE_KEY = 'easyfood_cart'
 
 function calcSetPrice(item) {
   let price = item.basePrice

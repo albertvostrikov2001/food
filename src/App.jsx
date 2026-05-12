@@ -65,17 +65,19 @@ function AppContent() {
 
       {/* Mobile sticky bottom bar */}
       {cartCount > 0 && (
-        <div className="fixed bottom-0 left-0 right-0 z-40 md:hidden bg-white border-t border-[#E5E0D8] px-4 py-3 flex items-center gap-3 shadow-lg">
+        <div className="fixed bottom-0 left-0 right-0 z-40 md:hidden bg-white px-4 py-3 flex items-center gap-3 shadow-lg" style={{ borderTop: '1px solid var(--color-border)' }}>
           <button
             onClick={() => setCartOpen(true)}
-            className="flex-1 flex items-center justify-center gap-2 py-3 border border-[#2D6A4F] text-[#2D6A4F] font-semibold rounded-xl text-sm hover:bg-[#F0FFF4] transition-colors"
+            className="flex-1 flex items-center justify-center gap-2 py-3 font-semibold rounded-xl text-sm transition-colors"
+            style={{ border: '1px solid var(--color-primary)', color: 'var(--color-primary)' }}
           >
             <ShoppingCart size={16} />
             Корзина ({cartCount})
           </button>
           <button
             onClick={() => openOrder(false)}
-            className="flex-1 flex items-center justify-center gap-2 py-3 bg-[#2D6A4F] text-white font-semibold rounded-xl text-sm hover:bg-[#1B4332] transition-colors"
+            className="flex-1 flex items-center justify-center gap-2 py-3 text-white font-semibold rounded-xl text-sm transition-colors"
+            style={{ background: 'var(--color-primary)' }}
           >
             <FileText size={16} />
             Оставить заявку
